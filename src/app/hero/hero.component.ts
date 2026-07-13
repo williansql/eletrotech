@@ -8,4 +8,4 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './hero.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeroComponent {}
+export class HeroComponent { }
