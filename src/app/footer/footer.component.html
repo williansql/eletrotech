@@ -1,0 +1,128 @@
+<!-- Testimonials -->
+<section class="py-20 bg-slate-900 border-t border-white/5">
+  <div class="container mx-auto px-4 max-w-5xl">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-display font-bold text-white">O que dizem os clientes</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="bg-slate-800 p-6 rounded-2xl border border-white/5">
+        <div class="flex text-amber-500 mb-4"><mat-icon>star</mat-icon><mat-icon>star</mat-icon><mat-icon>star</mat-icon><mat-icon>star</mat-icon><mat-icon>star</mat-icon></div>
+        <p class="text-slate-300 text-sm italic">"Muito profissional! Resolvemos o problema do quadro que desarmava a casa inteira."</p>
+        <p class="text-slate-500 text-xs mt-4 font-bold">- João Silva, Google Reviews</p>
+      </div>
+      <div class="bg-slate-800 p-6 rounded-2xl border border-white/5">
+         <div class="flex text-amber-500 mb-4"><mat-icon>star</mat-icon><mat-icon>star</mat-icon><mat-icon>star</mat-icon><mat-icon>star</mat-icon><mat-icon>star</mat-icon></div>
+        <p class="text-slate-300 text-sm italic">"Rápido no atendimento emergencial de domingo. Salvou as mercadorias da minha geladeira."</p>
+        <p class="text-slate-500 text-xs mt-4 font-bold">- Maria Santos, Cliente WhatsApp</p>
+      </div>
+      <div class="bg-slate-800 p-6 rounded-2xl border border-white/5">
+         <div class="flex text-amber-500 mb-4"><mat-icon>star</mat-icon><mat-icon>star</mat-icon><mat-icon>star</mat-icon><mat-icon>star</mat-icon><mat-icon>star</mat-icon></div>
+        <p class="text-slate-300 text-sm italic">"Refez toda a instalação da minha reforma. Muito capricho e preço justo."</p>
+        <p class="text-slate-500 text-xs mt-4 font-bold">- Carlos Ferreira</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="py-20 bg-slate-950 border-t border-white/5" id="faq">
+  <div class="container mx-auto px-4 max-w-3xl">
+    <h2 class="text-3xl font-display font-bold text-center text-white mb-12">Perguntas Frequentes</h2>
+    <div class="space-y-4">
+      @for (faq of faqs; track faq.q) {
+        <details class="group bg-slate-900 border border-white/10 rounded-xl p-4 [&_summary::-webkit-details-marker]:hidden cursor-pointer">
+          <summary class="flex items-center justify-between font-medium text-slate-200">
+            {{ faq.q }}
+            <span class="transition group-open:rotate-180">
+              <mat-icon class="text-amber-500">expand_more</mat-icon>
+            </span>
+          </summary>
+          <div class="text-slate-400 mt-4 text-sm leading-relaxed">
+            {{ faq.a }}
+          </div>
+        </details>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Footer & Contact -->
+<footer class="bg-slate-900 pt-20 pb-10 border-t border-white/10" id="contato">
+  <div class="container mx-auto px-4 max-w-6xl">
+    <div class="grid md:grid-cols-4 gap-12 mb-16">
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-2 mb-6">
+          <mat-icon class="text-amber-500">bolt</mat-icon>
+          <span class="text-xl font-display font-bold text-white">Eletricista Pro</span>
+        </div>
+        <p class="text-slate-400 text-sm max-w-md mb-8">
+          Instalações elétricas residenciais e comerciais. Segurança e qualidade em primeiro lugar, respeitando todas as normas técnicas da ABNT.
+        </p>
+        <div class="flex items-center gap-4">
+           <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-amber-500 hover:text-slate-900 transition-colors">
+            <mat-icon>facebook</mat-icon>
+           </a>
+           <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-amber-500 hover:text-slate-900 transition-colors">
+            <mat-icon>camera_alt</mat-icon> <!-- instagram mockup -->
+           </a>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-white font-bold mb-6">Contato</h4>
+        <ul class="space-y-4 text-sm text-slate-400">
+          <li class="flex items-start gap-3">
+            <mat-icon class="text-amber-500 text-[20px] w-[20px] h-[20px]">chat</mat-icon>
+            <div>
+              <p class="font-medium text-slate-300">WhatsApp</p>
+              <p>(11) 99999-9999</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+             <mat-icon class="text-amber-500 text-[20px] w-[20px] h-[20px]">call</mat-icon>
+            <div>
+              <p class="font-medium text-slate-300">Telefone</p>
+              <p>(11) 3333-3333</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+             <mat-icon class="text-amber-500 text-[20px] w-[20px] h-[20px]">email</mat-icon>
+            <div>
+              <p class="font-medium text-slate-300">E-mail</p>
+              <p>contato&#64;eletricista.com</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-white font-bold mb-6">Área de Atendimento</h4>
+        <ul class="space-y-4 text-sm text-slate-400">
+          <li class="flex items-start gap-3">
+            <mat-icon class="text-amber-500 text-[20px] w-[20px] h-[20px]">place</mat-icon>
+            <div>
+              <p class="font-medium text-slate-300">São Paulo e Região</p>
+              <p>Centro, Zona Sul, Zona Oeste e Alphaville.</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3 mt-4">
+            <mat-icon class="text-amber-500 text-[20px] w-[20px] h-[20px]">schedule</mat-icon>
+            <div>
+               <p class="font-medium text-slate-300">Horário</p>
+               <p>Seg - Sex: 08h às 18h</p>
+               <p class="text-red-400 mt-1">Emergência 24h</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+      <p>&copy; 2026 Eletricista Pro. Todos os direitos reservados.</p>
+      <div class="flex gap-4">
+        <a href="#" class="hover:text-amber-500">CREA: 123456789-0</a>
+        <a href="#" class="hover:text-amber-500">Política de Privacidade</a>
+      </div>
+    </div>
+  </div>
+</footer>

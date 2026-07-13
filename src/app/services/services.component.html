@@ -1,0 +1,46 @@
+<section class="py-24 relative" id="servicos">
+  <div class="container mx-auto px-4 max-w-6xl">
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <h2 class="text-3xl md:text-4xl font-display font-bold mb-4 text-white">Nossos Serviços</h2>
+      <p class="text-slate-400 text-lg">Soluções completas em elétrica com segurança e profissionalismo para sua casa ou negócio.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      @for (service of services; track service.title) {
+        <div class="group bg-slate-900 border border-white/5 p-6 rounded-2xl hover:border-amber-500/50 hover:bg-slate-800/80 transition-all duration-300">
+          <div class="w-12 h-12 rounded-xl bg-slate-800 border border-white/5 flex items-center justify-center text-amber-500 mb-4 group-hover:scale-110 group-hover:bg-amber-500/10 transition-transform">
+            <mat-icon>{{ service.icon }}</mat-icon>
+          </div>
+          <h3 class="text-lg font-semibold text-slate-200 mb-2">{{ service.title }}</h3>
+          <p class="text-slate-500 text-sm leading-relaxed">{{ service.desc }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Emergency Block -->
+<section class="py-16 bg-red-950/20 border-y border-red-900/30 relative overflow-hidden" id="emergencias">
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-900/20 via-transparent to-transparent"></div>
+  <div class="container mx-auto px-4 max-w-4xl relative z-10 text-center">
+    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-500/20 text-red-500 mb-6 animate-pulse">
+      <mat-icon class="text-[32px] w-[32px] h-[32px]">warning_amber</mat-icon>
+    </div>
+    <h2 class="text-3xl md:text-4xl font-display font-bold mb-8 text-white">Emergências Elétricas</h2>
+    
+    <div class="flex flex-wrap justify-center gap-4 mb-8">
+      <span class="px-4 py-2 bg-slate-900 border border-red-500/30 rounded-lg text-slate-300 text-sm font-medium">Está sem energia?</span>
+      <span class="px-4 py-2 bg-slate-900 border border-red-500/30 rounded-lg text-slate-300 text-sm font-medium">Curto circuito?</span>
+      <span class="px-4 py-2 bg-slate-900 border border-red-500/30 rounded-lg text-slate-300 text-sm font-medium">Disjuntor desarmando?</span>
+      <span class="px-4 py-2 bg-slate-900 border border-red-500/30 rounded-lg text-slate-300 text-sm font-medium">Cheiro de queimado?</span>
+      <span class="px-4 py-2 bg-slate-900 border border-red-500/30 rounded-lg text-slate-300 text-sm font-medium">Tomadas esquentando?</span>
+    </div>
+
+    <p class="text-red-400 mb-8 font-medium">Não corra riscos. Clique abaixo e fale agora mesmo.</p>
+
+    <a href="#contato" class="inline-flex items-center gap-2 px-8 py-4 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:shadow-[0_0_30px_rgba(220,38,38,0.6)]">
+      <mat-icon>sos</mat-icon>
+      Atendimento de Emergência
+    </a>
+  </div>
+</section>

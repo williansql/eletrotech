@@ -1,0 +1,305 @@
+<section class="py-24 bg-slate-950 relative border-t border-white/5" id="calculadoras">
+  <div class="container mx-auto px-4 max-w-5xl">
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <h2 class="text-3xl md:text-4xl font-display font-bold mb-4 text-white">Ferramentas e Calculadoras</h2>
+      <p class="text-slate-400 text-lg">Faça estimativas rápidas para sua instalação elétrica. Resultados aproximados para referência.</p>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-8">
+      <!-- Sidebar Tabs -->
+      <div class="w-full md:w-64 shrink-0 flex md:flex-col gap-2 overflow-x-auto pb-4 md:pb-0 hide-scrollbar">
+        <button (click)="setTab('power')" [class.bg-slate-800]="activeTab() === 'power'" [class.border-amber-500]="activeTab() === 'power'" class="flex items-center gap-3 px-4 py-3 rounded-xl border border-transparent hover:bg-slate-800/50 text-left transition-colors whitespace-nowrap">
+          <mat-icon [class.text-amber-500]="activeTab() === 'power'">bolt</mat-icon>
+          <span class="font-medium text-slate-200">Potência</span>
+        </button>
+        <button (click)="setTab('consumption')" [class.bg-slate-800]="activeTab() === 'consumption'" [class.border-amber-500]="activeTab() === 'consumption'" class="flex items-center gap-3 px-4 py-3 rounded-xl border border-transparent hover:bg-slate-800/50 text-left transition-colors whitespace-nowrap">
+          <mat-icon [class.text-amber-500]="activeTab() === 'consumption'">eco</mat-icon>
+          <span class="font-medium text-slate-200">Consumo</span>
+        </button>
+        <button (click)="setTab('shower')" [class.bg-slate-800]="activeTab() === 'shower'" [class.border-amber-500]="activeTab() === 'shower'" class="flex items-center gap-3 px-4 py-3 rounded-xl border border-transparent hover:bg-slate-800/50 text-left transition-colors whitespace-nowrap">
+          <mat-icon [class.text-amber-500]="activeTab() === 'shower'">shower</mat-icon>
+          <span class="font-medium text-slate-200">Chuveiro</span>
+        </button>
+        <button (click)="setTab('ac')" [class.bg-slate-800]="activeTab() === 'ac'" [class.border-amber-500]="activeTab() === 'ac'" class="flex items-center gap-3 px-4 py-3 rounded-xl border border-transparent hover:bg-slate-800/50 text-left transition-colors whitespace-nowrap">
+          <mat-icon [class.text-amber-500]="activeTab() === 'ac'">ac_unit</mat-icon>
+          <span class="font-medium text-slate-200">Ar Condicionado</span>
+        </button>
+        <button (click)="setTab('cable')" [class.bg-slate-800]="activeTab() === 'cable'" [class.border-amber-500]="activeTab() === 'cable'" class="flex items-center gap-3 px-4 py-3 rounded-xl border border-transparent hover:bg-slate-800/50 text-left transition-colors whitespace-nowrap">
+          <mat-icon [class.text-amber-500]="activeTab() === 'cable'">settings_input_component</mat-icon>
+          <span class="font-medium text-slate-200">Queda de Tensão</span>
+        </button>
+        <button (click)="setTab('simulator')" [class.bg-slate-800]="activeTab() === 'simulator'" [class.border-amber-500]="activeTab() === 'simulator'" class="flex items-center gap-3 px-4 py-3 rounded-xl border border-transparent hover:bg-slate-800/50 text-left transition-colors whitespace-nowrap">
+          <mat-icon [class.text-amber-500]="activeTab() === 'simulator'">home_repair_service</mat-icon>
+          <span class="font-medium text-slate-200">Simulador Reforma</span>
+        </button>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="flex-1 bg-slate-900 border border-white/5 rounded-2xl p-6 md:p-8 min-h-[450px]">
+        
+        @if (activeTab() === 'power') {
+          <div class="animate-fade-in-up">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+              <mat-icon class="text-amber-500">bolt</mat-icon>
+              Calculadora de Potência
+            </h3>
+            <form [formGroup]="powerForm" (ngSubmit)="calcPower()" class="grid md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-slate-400 mb-2">Tensão (Voltagem)</label>
+                <select formControlName="voltage" class="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500">
+                  <option value="127">127V</option>
+                  <option value="220">220V</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-400 mb-2">Potência (Watts)</label>
+                <input type="number" formControlName="power" class="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500" placeholder="Ex: 2200">
+              </div>
+              <div class="md:col-span-2">
+                <button type="submit" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-3 rounded-xl transition-colors">Calcular Dimensionamento</button>
+              </div>
+            </form>
+
+            @if (powerResult()) {
+              <div class="mt-8 p-6 bg-amber-500/10 border border-amber-500/20 rounded-xl animate-fade-in-up">
+                <h4 class="text-amber-500 font-semibold mb-4 text-center">Resultado Sugerido</h4>
+                <div class="grid grid-cols-3 gap-4 text-center">
+                  <div>
+                    <div class="text-2xl md:text-3xl font-bold text-white">{{ powerResult()?.current }}A</div>
+                    <div class="text-xs text-slate-400">Corrente</div>
+                  </div>
+                  <div>
+                    <div class="text-2xl md:text-3xl font-bold text-white">{{ powerResult()?.breaker }}A</div>
+                    <div class="text-xs text-slate-400">Disjuntor Recomendado</div>
+                  </div>
+                  <div>
+                    <div class="text-2xl md:text-3xl font-bold text-white">{{ powerResult()?.wire }}mm²</div>
+                    <div class="text-xs text-slate-400">Bitola do Fio</div>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        @if (activeTab() === 'consumption') {
+           <div class="animate-fade-in-up">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+              <mat-icon class="text-amber-500">eco</mat-icon>
+              Calculadora de Consumo
+            </h3>
+            <form [formGroup]="consumptionForm" (ngSubmit)="calcConsumption()" class="grid md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-slate-400 mb-2">Aparelho</label>
+                <select formControlName="device" class="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500">
+                  <option value="Geladeira">Geladeira (Média)</option>
+                  <option value="TV">TV LED</option>
+                  <option value="Microondas">Microondas</option>
+                  <option value="Ar-condicionado">Ar-condicionado</option>
+                  <option value="Chuveiro">Chuveiro Elétrico</option>
+                  <option value="Computador">Computador (Desktop)</option>
+                  <option value="Ferro">Ferro de Passar</option>
+                  <option value="Lampada">Lâmpada LED</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-400 mb-2">Quantidade</label>
+                <input type="number" formControlName="qty" class="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-400 mb-2">Horas de uso por dia</label>
+                <input type="number" formControlName="hours" class="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-400 mb-2">Dias de uso por mês</label>
+                <input type="number" formControlName="days" class="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-400 mb-2">Preço do kWh (R$)</label>
+                <input type="number" step="0.01" formControlName="kwhPrice" class="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500">
+              </div>
+              <div class="md:col-span-2">
+                <button type="submit" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-3 rounded-xl transition-colors">Calcular Consumo</button>
+              </div>
+            </form>
+
+            @if (consumptionResult()) {
+              <div class="mt-8 p-6 bg-amber-500/10 border border-amber-500/20 rounded-xl animate-fade-in-up">
+                <h4 class="text-amber-500 font-semibold mb-4 text-center">Estimativa Mensal</h4>
+                <div class="grid grid-cols-2 gap-4 text-center">
+                  <div>
+                    <div class="text-3xl font-bold text-white">{{ consumptionResult()?.kwh }} kWh</div>
+                    <div class="text-sm text-slate-400">Consumo Total</div>
+                  </div>
+                  <div>
+                    <div class="text-3xl font-bold text-white">R$ {{ consumptionResult()?.cost }}</div>
+                    <div class="text-sm text-slate-400">Valor Aproximado</div>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        @if (activeTab() === 'shower') {
+          <div class="animate-fade-in-up">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+              <mat-icon class="text-amber-500">shower</mat-icon>
+              Calculadora para Chuveiro
+            </h3>
+            <form [formGroup]="showerForm" (ngSubmit)="calcShower()" class="grid md:grid-cols-2 gap-6">
+               <div>
+                <label class="block text-sm font-medium text-slate-400 mb-2">Potência do Chuveiro</label>
+                <select formControlName="power" class="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500">
+                  <option value="5500">5500W</option>
+                  <option value="6800">6800W</option>
+                  <option value="7500">7500W</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-400 mb-2">Tensão (Voltagem)</label>
+                <select formControlName="voltage" class="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500">
+                  <option value="127">127V</option>
+                  <option value="220">220V</option>
+                </select>
+              </div>
+              <div class="md:col-span-2">
+                <button type="submit" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-3 rounded-xl transition-colors">Dimensionar</button>
+              </div>
+            </form>
+
+            @if (showerResult()) {
+              <div class="mt-8 p-6 bg-amber-500/10 border border-amber-500/20 rounded-xl animate-fade-in-up text-center">
+                <h4 class="text-amber-500 font-semibold mb-4">Instalação Segura</h4>
+                 <div class="grid grid-cols-3 gap-4">
+                  <div>
+                    <div class="text-2xl md:text-3xl font-bold text-white">{{ showerResult()?.current }}A</div>
+                    <div class="text-xs text-slate-400">Corrente</div>
+                  </div>
+                  <div>
+                    <div class="text-2xl md:text-3xl font-bold text-white">{{ showerResult()?.breaker }}A</div>
+                    <div class="text-xs text-slate-400">Disjuntor Recomendado</div>
+                  </div>
+                  <div>
+                    <div class="text-2xl md:text-3xl font-bold text-white">{{ showerResult()?.wire }}mm²</div>
+                    <div class="text-xs text-slate-400">Bitola do Fio</div>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        @if (activeTab() === 'simulator') {
+          <div class="animate-fade-in-up">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+              <mat-icon class="text-amber-500">home_repair_service</mat-icon>
+              Simulador de Reforma Elétrica
+            </h3>
+            <form [formGroup]="simulatorForm" (ngSubmit)="calcSimulator()" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-xs font-medium text-slate-400 mb-1">Tomadas</label>
+                <input type="number" formControlName="outlets" class="w-full bg-slate-950 border border-white/10 rounded-lg px-3 py-2 text-white">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-400 mb-1">Interruptores</label>
+                <input type="number" formControlName="switches" class="w-full bg-slate-950 border border-white/10 rounded-lg px-3 py-2 text-white">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-400 mb-1">Luminárias</label>
+                <input type="number" formControlName="lights" class="w-full bg-slate-950 border border-white/10 rounded-lg px-3 py-2 text-white">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-400 mb-1">Ventiladores</label>
+                <input type="number" formControlName="fans" class="w-full bg-slate-950 border border-white/10 rounded-lg px-3 py-2 text-white">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-400 mb-1">Quadros</label>
+                <input type="number" formControlName="boards" class="w-full bg-slate-950 border border-white/10 rounded-lg px-3 py-2 text-white">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-400 mb-1">Disjuntores</label>
+                <input type="number" formControlName="breakers" class="w-full bg-slate-950 border border-white/10 rounded-lg px-3 py-2 text-white">
+              </div>
+              <div class="col-span-2 md:col-span-3 pt-4">
+                <button type="submit" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-3 rounded-xl transition-colors">Estimar Valor (Mão de Obra)</button>
+              </div>
+            </form>
+
+            @if (simulatorResult()) {
+              <div class="mt-8 p-6 bg-slate-800 border border-slate-700 rounded-xl text-center">
+                <div class="text-sm text-slate-400 mb-1">Valor estimado para mão de obra:</div>
+                <div class="text-4xl font-bold text-white mb-4">R$ {{ simulatorResult()?.cost }}</div>
+                <p class="text-xs text-slate-500 max-w-sm mx-auto">Valor estimado e sujeito a alterações. Solicite orçamento para confirmação mediante visita técnica.</p>
+                <a href="#contato" class="inline-block mt-6 px-8 py-3 bg-amber-500 hover:bg-amber-400 transition-colors text-slate-900 rounded-lg font-bold text-sm">Confirmar Orçamento</a>
+              </div>
+            }
+          </div>
+        }
+
+        @if (activeTab() === 'ac') {
+          <div class="animate-fade-in-up">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+              <mat-icon class="text-amber-500">ac_unit</mat-icon>
+              Ar Condicionado (220V)
+            </h3>
+            <form [formGroup]="acForm" (ngSubmit)="calcAc()" class="max-w-md">
+               <label class="block text-sm font-medium text-slate-400 mb-2">Capacidade</label>
+               <select formControlName="btu" class="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white mb-6 focus:outline-none focus:border-amber-500">
+                  <option value="9000">9.000 BTUs</option>
+                  <option value="12000">12.000 BTUs</option>
+                  <option value="18000">18.000 BTUs</option>
+                  <option value="24000">24.000 BTUs</option>
+                </select>
+                <button type="submit" class="w-full bg-slate-800 hover:bg-slate-700 py-3 rounded-xl text-white font-medium transition-colors">Dimensionar</button>
+            </form>
+             @if (acResult()) {
+              <div class="mt-8 max-w-md p-6 bg-amber-500/10 border border-amber-500/20 rounded-xl text-center grid grid-cols-3 gap-2">
+                 <div><div class="font-bold text-2xl text-white">{{acResult()?.current}}A</div><div class="text-xs text-slate-400">Corrente</div></div>
+                 <div><div class="font-bold text-2xl text-white">{{acResult()?.breaker}}A</div><div class="text-xs text-slate-400">Disjuntor</div></div>
+                 <div><div class="font-bold text-2xl text-white">{{acResult()?.wire}}mm²</div><div class="text-xs text-slate-400">Fio</div></div>
+              </div>
+            }
+          </div>
+        }
+        
+        @if (activeTab() === 'cable') {
+          <div class="animate-fade-in-up">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+              <mat-icon class="text-amber-500">settings_input_component</mat-icon>
+              Calculadora de Cabo / Queda de Tensão
+            </h3>
+            <form [formGroup]="cableForm" (ngSubmit)="calcCable()" class="grid md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-slate-400 mb-2">Potência (Watts)</label>
+                <input type="number" formControlName="power" class="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-400 mb-2">Distância (metros)</label>
+                <input type="number" formControlName="distance" class="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500">
+              </div>
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-slate-400 mb-2">Tensão (Voltagem)</label>
+                <select formControlName="voltage" class="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500">
+                  <option value="127">127V</option>
+                  <option value="220">220V</option>
+                </select>
+              </div>
+              <div class="md:col-span-2">
+                <button type="submit" class="w-full bg-slate-800 hover:bg-slate-700 py-3 rounded-xl text-white font-medium transition-colors">Verificar</button>
+              </div>
+            </form>
+            @if (cableResult()) {
+              <div class="mt-8 p-6 bg-amber-500/10 border border-amber-500/20 rounded-xl text-center">
+                <p class="text-slate-300">Bitola Base Sugerida: <span class="text-2xl font-bold text-amber-500 block mt-2">{{cableResult()?.wire}} mm²</span></p>
+                <p class="text-sm text-slate-400 mt-4">Queda de tensão estimada: <span class="font-bold text-white">{{cableResult()?.drop}}%</span></p>
+                <p class="text-xs text-slate-500 mt-2 bg-slate-900/50 p-2 rounded inline-block">Se a queda for maior que 4%, considere aumentar a bitola do fio para segurança.</p>
+              </div>
+            }
+          </div>
+        }
+
+      </div>
+    </div>
+  </div>
+</section>

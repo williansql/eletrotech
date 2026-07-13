@@ -1,0 +1,54 @@
+<section class="py-24 bg-slate-900 border-t border-white/5 relative" id="diagnostico">
+  <div class="container mx-auto px-4 max-w-4xl">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-display font-bold mb-4 text-white">Diagnóstico Inteligente</h2>
+      <p class="text-slate-400">Identifique o problema e saiba as possíveis causas antes da visita.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-8 items-start">
+      <div class="space-y-3">
+        @for (q of questions; track q.q) {
+          <button (click)="selectQuestion(q)" 
+                  [class.border-amber-500]="selectedQ() === q"
+                  [class.bg-slate-800]="selectedQ() === q"
+                  class="w-full text-left p-4 rounded-xl border border-white/10 hover:border-amber-500/50 hover:bg-slate-800/50 transition-all flex justify-between items-center group">
+            <span class="text-slate-200 font-medium">{{ q.q }}</span>
+            <mat-icon class="text-slate-600 group-hover:text-amber-500 transition-colors" [class.text-amber-500]="selectedQ() === q">chevron_right</mat-icon>
+          </button>
+        }
+      </div>
+
+      <div class="bg-slate-950 p-6 md:p-8 rounded-2xl border border-white/5 min-h-[350px] flex flex-col justify-center shadow-xl">
+        @if (selectedQ(); as q) {
+          <div class="animate-fade-in-up h-full flex flex-col">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500">
+                <mat-icon>health_and_safety</mat-icon>
+              </div>
+              <h3 class="text-lg font-bold text-white">Possíveis Causas</h3>
+            </div>
+            
+            <div class="bg-red-950/20 border border-red-900/30 p-5 rounded-xl mb-4">
+              <p class="text-red-300 text-sm leading-relaxed">{{ q.cause }}</p>
+            </div>
+
+            <div class="bg-blue-950/20 border border-blue-900/30 p-5 rounded-xl mb-8 flex-1">
+              <p class="text-blue-300 text-sm leading-relaxed"><span class="font-bold text-blue-400 block mb-1">Orientação Profissional:</span> {{ q.tip }}</p>
+            </div>
+
+            <a href="#contato" class="inline-flex w-full justify-center items-center gap-2 px-6 py-4 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold rounded-xl transition-all shadow-[0_0_15px_rgba(245,158,11,0.2)] hover:shadow-[0_0_25px_rgba(245,158,11,0.4)]">
+              <mat-icon>calendar_month</mat-icon>
+              Solicitar Visita Técnica
+            </a>
+          </div>
+        } @else {
+          <div class="text-center text-slate-500 animate-fade-in-up">
+            <mat-icon class="text-[48px] w-[48px] h-[48px] mb-4 opacity-50 block mx-auto text-amber-500/50">touch_app</mat-icon>
+            <p class="font-medium text-slate-400">Selecione um problema ao lado</p>
+            <p class="text-sm mt-2">Para ver o diagnóstico e recomendações de segurança.</p>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>

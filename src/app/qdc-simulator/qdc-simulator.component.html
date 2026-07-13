@@ -1,0 +1,502 @@
+<section class="py-24 bg-slate-900 border-t border-white/5 relative" id="qdc-simulator">
+  <div class="container mx-auto px-4 max-w-6xl">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-display font-bold mb-4 text-white">Simulador de Quadro (QDC) Interativo</h2>
+      <p class="text-slate-400 text-lg">Selecione o tipo de rede, adicione os componentes e clique nos terminais (bolinhas) para passar a fiação.</p>
+      <p class="text-amber-500 text-sm mt-2">Dica: Ao conectar os fios, clique no espaço vazio para fazer a curva e fixar (organizar).<br>Clique em um fio existente para apagá-lo. Pressione ESC para cancelar a linha atual.</p>
+    </div>
+    
+    <div class="grid lg:grid-cols-12 gap-8">
+      
+      <!-- Left side: Builder controls -->
+      <div class="lg:col-span-4 space-y-6">
+        <div class="bg-slate-800/50 p-6 rounded-2xl border border-white/10 shadow-xl">
+          
+          <!-- Step 0: Rede -->
+          <div class="mb-8">
+            <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-amber-500 text-slate-900 flex items-center justify-center text-sm font-bold shadow-lg shrink-0">0</div>
+              Tipo de Rede
+            </h3>
+            <div class="space-y-4">
+               <div>
+                  <label class="block text-sm font-medium text-slate-400 mb-2">Fases</label>
+                  <select [value]="networkType()" (change)="onNetworkTypeChange($event)" class="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500">
+                    <option value="mono">Monofásica (1 Fase)</option>
+                    <option value="bi">Bifásica (2 Fases)</option>
+                    <option value="tri">Trifásica (3 Fases)</option>
+                  </select>
+               </div>
+               <div>
+                  <label class="block text-sm font-medium text-slate-400 mb-2">Voltagem</label>
+                  <select [value]="voltage()" (change)="onVoltageChange($event)" class="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500">
+                    <option value="127">127V / 220V</option>
+                    <option value="220">220V / 380V</option>
+                  </select>
+               </div>
+            </div>
+          </div>
+
+          <!-- Step 1: Proteções -->
+          <div class="mb-8">
+            <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-amber-500 text-slate-900 flex items-center justify-center text-sm font-bold shadow-lg shrink-0">1</div>
+              Proteções Principais
+            </h3>
+            <div class="space-y-3">
+              <label class="flex items-center justify-between p-4 rounded-xl border border-white/10 hover:bg-slate-800 cursor-pointer transition-all duration-300"
+                     [class.border-amber-500]="hasGeral()" [class.bg-slate-800]="hasGeral()">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-slate-900 border border-white/5" [class.text-amber-500]="hasGeral()" [class.border-amber-500]="hasGeral()">
+                    <mat-icon class="text-slate-400" [class.text-amber-500]="hasGeral()">power</mat-icon>
+                  </div>
+                  <div>
+                    <div class="font-bold text-slate-200">Disjuntor Geral</div>
+                    <div class="text-xs text-slate-500">Proteção mestre</div>
+                  </div>
+                </div>
+                <div class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" class="sr-only peer" [checked]="hasGeral()" (change)="toggleGeral()">
+                  <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+                </div>
+              </label>
+
+              <label class="flex items-center justify-between p-4 rounded-xl border border-white/10 hover:bg-slate-800 cursor-pointer transition-all duration-300"
+                     [class.border-amber-500]="hasDR()" [class.bg-slate-800]="hasDR()">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-slate-900 border border-white/5" [class.text-amber-500]="hasDR()" [class.border-amber-500]="hasDR()">
+                    <mat-icon class="text-slate-400" [class.text-amber-500]="hasDR()">health_and_safety</mat-icon>
+                  </div>
+                  <div>
+                    <div class="font-bold text-slate-200">Dispositivo DR</div>
+                    <div class="text-xs text-slate-500">Contra choques</div>
+                  </div>
+                </div>
+                <div class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" class="sr-only peer" [checked]="hasDR()" (change)="toggleDR()">
+                  <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+                </div>
+              </label>
+
+              <label class="flex items-center justify-between p-4 rounded-xl border border-white/10 hover:bg-slate-800 cursor-pointer transition-all duration-300"
+                     [class.border-amber-500]="hasDPS()" [class.bg-slate-800]="hasDPS()">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-slate-900 border border-white/5" [class.text-amber-500]="hasDPS()" [class.border-amber-500]="hasDPS()">
+                    <mat-icon class="text-slate-400" [class.text-amber-500]="hasDPS()">flash_on</mat-icon>
+                  </div>
+                  <div>
+                    <div class="font-bold text-slate-200">Dispositivo DPS</div>
+                    <div class="text-xs text-slate-500">Contra raios</div>
+                  </div>
+                </div>
+                <div class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" class="sr-only peer" [checked]="hasDPS()" (change)="toggleDPS()">
+                  <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Step 2: Circuitos -->
+          <div>
+            <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-amber-500 text-slate-900 flex items-center justify-center text-sm font-bold shadow-lg shrink-0">2</div>
+              Adicionar Circuitos
+            </h3>
+            <div class="grid grid-cols-2 gap-3">
+              <button (click)="addCircuit('iluminacao')" class="flex flex-col items-center justify-center p-4 bg-slate-900 border border-white/10 rounded-xl hover:border-amber-500 hover:bg-slate-800 hover:text-amber-500 text-slate-300 transition-all group">
+                <mat-icon class="group-hover:scale-110 transition-transform">lightbulb</mat-icon>
+                <span class="text-xs font-bold mt-2">Iluminação</span>
+              </button>
+              <button (click)="addCircuit('tug')" class="flex flex-col items-center justify-center p-4 bg-slate-900 border border-white/10 rounded-xl hover:border-amber-500 hover:bg-slate-800 hover:text-amber-500 text-slate-300 transition-all group">
+                <mat-icon class="group-hover:scale-110 transition-transform">power</mat-icon>
+                <span class="text-xs font-bold mt-2">Tomadas</span>
+              </button>
+              <button (click)="addCircuit('chuveiro')" class="flex flex-col items-center justify-center p-4 bg-slate-900 border border-white/10 rounded-xl hover:border-amber-500 hover:bg-slate-800 hover:text-amber-500 text-slate-300 transition-all group">
+                <mat-icon class="group-hover:scale-110 transition-transform">shower</mat-icon>
+                <span class="text-xs font-bold mt-2">Chuveiro</span>
+              </button>
+              <button (click)="addCircuit('ar')" class="flex flex-col items-center justify-center p-4 bg-slate-900 border border-white/10 rounded-xl hover:border-amber-500 hover:bg-slate-800 hover:text-amber-500 text-slate-300 transition-all group">
+                <mat-icon class="group-hover:scale-110 transition-transform">ac_unit</mat-icon>
+                <span class="text-xs font-bold mt-2">Ar Cond.</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Right side: Visualizer & Wires -->
+      <div class="lg:col-span-8 flex flex-col h-full">
+        
+        <div class="flex justify-between items-center mb-6 px-2">
+          <h3 class="text-xl font-bold text-white flex items-center gap-2">
+             <mat-icon class="text-amber-500">developer_board</mat-icon>
+             Seu Quadro Interativo
+          </h3>
+          <div class="bg-slate-800 px-4 py-2 rounded-xl border border-white/10 flex items-center gap-3 shadow-lg">
+            <span class="text-sm font-medium text-slate-400">Nível de Segurança:</span>
+            <span class="font-black text-xl" 
+                  [class.text-red-500]="safetyScore() < 50"
+                  [class.text-amber-500]="safetyScore() >= 50 && safetyScore() < 100"
+                  [class.text-green-500]="safetyScore() === 100">
+              {{safetyScore()}}%
+            </span>
+          </div>
+        </div>
+
+        <!-- The QDC Board Visual -->
+        <div #qdcContainer class="flex-1 bg-slate-200 w-full rounded-2xl p-6 md:p-8 relative shadow-inner border-[12px] border-slate-300 flex flex-col min-h-[450px] overflow-hidden" 
+             (mousemove)="onMouseMove($event)" (click)="onBoardClick($event)">
+           
+           <!-- SVG Wires Overlay -->
+           <svg class="absolute inset-0 w-full h-full pointer-events-none z-[100] opacity-90">
+             <defs>
+               <filter id="glow">
+                 <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+                 <feMerge>
+                   <feMergeNode in="coloredBlur"/>
+                   <feMergeNode in="SourceGraphic"/>
+                 </feMerge>
+               </filter>
+             </defs>
+             @for (path of wirePaths(); track path.id) {
+                <g class="pointer-events-auto cursor-pointer group" (click)="removeWire(path.id, $event)">
+                  <path [attr.d]="path.d" fill="none" stroke="transparent" stroke-width="20" stroke-linecap="round" stroke-linejoin="round" />
+                  <path [attr.d]="path.d" fill="none" [attr.stroke]="path.color" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
+                        class="drop-shadow-md group-hover:stroke-red-500 group-hover:stroke-[6px] transition-all" />
+                </g>
+             }
+             @if (activeWirePath(); as activePath) {
+                <path [attr.d]="activePath.d" fill="none" [attr.stroke]="activePath.color" stroke-width="4" stroke-dasharray="8 4" stroke-linecap="round" stroke-linejoin="round" class="opacity-70 drop-shadow-md pointer-events-none"/>
+             }
+           </svg>
+
+           <!-- Background grid for realism -->
+           <div class="absolute inset-0 opacity-20 pointer-events-none z-0" style="background-image: radial-gradient(#64748b 1.5px, transparent 1.5px); background-size: 24px 24px;"></div>
+           
+           <!-- Entrada (Grid) -->
+           <div class="flex gap-4 mb-8 bg-slate-900/50 p-4 rounded-xl border border-slate-400 w-fit relative z-40 shadow-lg backdrop-blur-sm cursor-default">
+             <div class="text-[10px] text-slate-200 font-bold mb-2 absolute -top-3 left-4 bg-slate-800 px-2 rounded">ENTRADA (REDE)</div>
+             
+             @for (p of phases(); track p) {
+                <div class="flex flex-col items-center">
+                  <div [id]="'grid_' + p" class="w-5 h-5 rounded-full border-2 cursor-pointer transition-transform hover:scale-125 bg-slate-800" 
+                       [class.ring-4]="activeTerminal() === 'grid_' + p" [class.ring-amber-500]="activeTerminal() === 'grid_' + p"
+                       [style.borderColor]="getTerminalColor('grid_' + p)" [style.backgroundColor]="isConnected('grid_' + p) ? getTerminalColor('grid_' + p) : '#1e293b'"
+                       (click)="onTerminalClick('grid_' + p, $event)"></div>
+                  <span class="text-[10px] mt-2 text-slate-700 font-bold">FASE {{p === 'f1' ? '1' : p === 'f2' ? '2' : '3'}}</span>
+                </div>
+             }
+             
+             <div class="flex flex-col items-center">
+               <div id="grid_n" class="w-5 h-5 rounded-full border-2 cursor-pointer transition-transform hover:scale-125 bg-slate-800"
+                    [class.ring-4]="activeTerminal() === 'grid_n'" [class.ring-amber-500]="activeTerminal() === 'grid_n'"
+                    [style.borderColor]="getTerminalColor('grid_n')" [style.backgroundColor]="isConnected('grid_n') ? getTerminalColor('grid_n') : '#1e293b'"
+                    (click)="onTerminalClick('grid_n', $event)"></div>
+               <span class="text-[10px] mt-2 text-slate-700 font-bold">NEUTRO</span>
+             </div>
+             <div class="flex flex-col items-center">
+               <div id="grid_pe" class="w-5 h-5 rounded-full border-2 cursor-pointer transition-transform hover:scale-125 bg-slate-800"
+                    [class.ring-4]="activeTerminal() === 'grid_pe'" [class.ring-amber-500]="activeTerminal() === 'grid_pe'"
+                    [style.borderColor]="getTerminalColor('grid_pe')" [style.backgroundColor]="isConnected('grid_pe') ? getTerminalColor('grid_pe') : '#1e293b'"
+                    (click)="onTerminalClick('grid_pe', $event)"></div>
+               <span class="text-[10px] mt-2 text-slate-700 font-bold">TERRA</span>
+             </div>
+           </div>
+
+           <!-- DIN rail for components -->
+           <div class="relative w-full z-40 flex-1 cursor-default">
+             <div class="w-[110%] bg-zinc-400/80 h-10 absolute top-1/2 -translate-y-1/2 -left-4 shadow-md pointer-events-none z-0 border-y border-zinc-500"></div> 
+
+             <div class="relative flex flex-wrap gap-2 justify-start items-center w-full z-10 p-3 bg-slate-800/10 rounded-xl min-h-[160px] border border-slate-400/30 backdrop-blur-sm shadow-inner">
+                
+                @if (hasGeral()) {
+                  <div class="h-[140px] bg-slate-50 rounded-md border-2 border-slate-400 shadow-xl flex flex-col items-center justify-between p-2 animate-fade-in-up relative z-20"
+                       [class.w-12]="phases().length === 1" [class.w-20]="phases().length === 2" [class.w-28]="phases().length === 3">
+                     
+                     <div class="flex justify-around w-full">
+                       @for (p of phases(); track p) {
+                          <div [id]="'geral_in_' + p" class="w-4 h-4 rounded-full border-2 cursor-pointer hover:scale-125 transition-all bg-slate-200"
+                               [class.ring-4]="activeTerminal() === 'geral_in_' + p" [class.ring-amber-500]="activeTerminal() === 'geral_in_' + p"
+                               [style.borderColor]="getTerminalColor('geral_in_' + p)" [style.backgroundColor]="isConnected('geral_in_' + p) ? getTerminalColor('geral_in_' + p) : '#e2e8f0'"
+                               (click)="onTerminalClick('geral_in_' + p, $event)"></div>
+                       }
+                     </div>
+                          
+                     <div class="w-full flex gap-1 mt-1">
+                        @for (p of phases(); track p) { <div class="flex-1 h-3 bg-red-500 rounded-sm shadow-inner"></div> }
+                     </div>
+                     <div class="text-[10px] font-black text-center text-slate-700 tracking-tighter">GERAL</div>
+                     <div class="w-full flex gap-1 mb-1">
+                        @for (p of phases(); track p) {
+                          <div class="flex-1 h-4 bg-slate-300 rounded-sm border-t border-slate-400 flex items-center justify-center">
+                             <div class="w-2 h-1 bg-slate-500 rounded-full"></div>
+                          </div>
+                        }
+                     </div>
+                     
+                     <div class="flex justify-around w-full">
+                       @for (p of phases(); track p) {
+                          <div [id]="'geral_out_' + p" class="w-4 h-4 rounded-full border-2 cursor-pointer hover:scale-125 transition-all bg-slate-200"
+                               [class.ring-4]="activeTerminal() === 'geral_out_' + p" [class.ring-amber-500]="activeTerminal() === 'geral_out_' + p"
+                               [style.borderColor]="getTerminalColor('geral_out_' + p)" [style.backgroundColor]="isConnected('geral_out_' + p) ? getTerminalColor('geral_out_' + p) : '#e2e8f0'"
+                               (click)="onTerminalClick('geral_out_' + p, $event)"></div>
+                       }
+                     </div>
+                  </div>
+                }
+                
+                @if (hasDPS()) {
+                   @for (p of phases(); track p) {
+                     <div class="w-12 h-[140px] bg-slate-50 rounded-md border-2 border-slate-400 shadow-xl flex flex-col items-center justify-between p-2 animate-fade-in-up relative z-20">
+                       <div [id]="'dps_in_' + p" class="w-4 h-4 rounded-full border-2 cursor-pointer hover:scale-125 transition-all bg-slate-200"
+                            [class.ring-4]="activeTerminal() === 'dps_in_' + p" [class.ring-amber-500]="activeTerminal() === 'dps_in_' + p"
+                            [style.borderColor]="getTerminalColor('dps_in_' + p)" [style.backgroundColor]="isConnected('dps_in_' + p) ? getTerminalColor('dps_in_' + p) : '#e2e8f0'"
+                            (click)="onTerminalClick('dps_in_' + p, $event)"></div>
+                            
+                       <div class="w-full h-3 bg-green-500 rounded-sm shadow-inner mt-1"></div>
+                       <div class="text-[11px] font-black text-center text-slate-700">DPS</div>
+                       <div class="w-full h-4 bg-slate-300 rounded-sm border-t border-slate-400 flex items-center justify-center mb-1">
+                          <div class="w-2 h-1 bg-slate-500 rounded-full"></div>
+                       </div>
+                       
+                       <div [id]="'dps_out_' + p" class="w-4 h-4 rounded-full border-2 cursor-pointer hover:scale-125 transition-all bg-slate-200"
+                            [class.ring-4]="activeTerminal() === 'dps_out_' + p" [class.ring-amber-500]="activeTerminal() === 'dps_out_' + p"
+                            [style.borderColor]="getTerminalColor('dps_out_' + p)" [style.backgroundColor]="isConnected('dps_out_' + p) ? getTerminalColor('dps_out_' + p) : '#e2e8f0'"
+                            (click)="onTerminalClick('dps_out_' + p, $event)"></div>
+                     </div>
+                   }
+                }
+
+                @if (hasDR()) {
+                   <div class="h-[140px] bg-slate-50 rounded-md border-2 border-slate-400 shadow-xl flex flex-col justify-between p-2 animate-fade-in-up relative z-20"
+                        [class.w-[80px]]="phases().length === 1" [class.w-[140px]]="phases().length > 1">
+                     <div class="flex justify-around w-full">
+                       @for (p of (phases().length === 1 ? ['f1'] : ['f1', 'f2', 'f3']); track p) {
+                         <div [id]="'dr_in_' + p" class="w-4 h-4 rounded-full border-2 cursor-pointer transition-all bg-slate-200"
+                              [class.ring-4]="activeTerminal() === 'dr_in_' + p" [class.ring-amber-500]="activeTerminal() === 'dr_in_' + p"
+                              [style.borderColor]="getTerminalColor('dr_in_' + p)" [style.backgroundColor]="isConnected('dr_in_' + p) ? getTerminalColor('dr_in_' + p) : '#e2e8f0'"
+                              (click)="onTerminalClick('dr_in_' + p, $event)"></div>
+                       }
+                       <div id="dr_in_n" class="w-4 h-4 rounded-full border-2 cursor-pointer transition-all bg-slate-200"
+                            [class.ring-4]="activeTerminal() === 'dr_in_n'" [class.ring-amber-500]="activeTerminal() === 'dr_in_n'"
+                            [style.borderColor]="getTerminalColor('dr_in_n')" [style.backgroundColor]="isConnected('dr_in_n') ? getTerminalColor('dr_in_n') : '#e2e8f0'"
+                            (click)="onTerminalClick('dr_in_n', $event)"></div>
+                     </div>
+                     
+                     <div class="w-full flex gap-1 mt-1">
+                        @for (i of (phases().length === 1 ? [1,2] : [1,2,3,4]); track $index) {
+                           <div class="flex-1 h-3 bg-blue-500 rounded-sm shadow-inner"></div>
+                        }
+                     </div>
+                     <div class="text-[12px] font-black text-center text-slate-700">IDR</div>
+                     <div class="flex justify-center mb-1"><div class="w-2.5 h-2.5 bg-slate-800 rounded-full border border-slate-400 shadow-inner"></div></div>
+                     <div class="w-full h-4 bg-slate-300 rounded-sm border-t border-slate-400 mb-1"></div>
+
+                     <div class="flex justify-around w-full mt-auto">
+                       @for (p of (phases().length === 1 ? ['f1'] : ['f1', 'f2', 'f3']); track p) {
+                         <div [id]="'dr_out_' + p" class="w-4 h-4 rounded-full border-2 cursor-pointer transition-all bg-slate-200"
+                              [class.ring-4]="activeTerminal() === 'dr_out_' + p" [class.ring-amber-500]="activeTerminal() === 'dr_out_' + p"
+                              [style.borderColor]="getTerminalColor('dr_out_' + p)" [style.backgroundColor]="isConnected('dr_out_' + p) ? getTerminalColor('dr_out_' + p) : '#e2e8f0'"
+                              (click)="onTerminalClick('dr_out_' + p, $event)"></div>
+                       }
+                       <div id="dr_out_n" class="w-4 h-4 rounded-full border-2 cursor-pointer transition-all bg-slate-200"
+                            [class.ring-4]="activeTerminal() === 'dr_out_n'" [class.ring-amber-500]="activeTerminal() === 'dr_out_n'"
+                            [style.borderColor]="getTerminalColor('dr_out_n')" [style.backgroundColor]="isConnected('dr_out_n') ? getTerminalColor('dr_out_n') : '#e2e8f0'"
+                            (click)="onTerminalClick('dr_out_n', $event)"></div>
+                     </div>
+                  </div>
+                }
+
+                <!-- Divider -->
+                @if ((hasGeral() || hasDPS() || hasDR()) && circuits().length > 0) {
+                   <div class="w-4 h-[100px] flex items-center justify-center">
+                      <div class="w-[2px] h-[80px] bg-slate-400/50 rounded-full"></div>
+                   </div>
+                }
+
+                @for (circ of circuits(); track circ.id) {
+                   <div class="w-12 h-[140px] bg-slate-50 rounded-md border-2 border-slate-400 shadow-xl flex flex-col items-center justify-between p-2 animate-fade-in-up group relative z-20 hover:border-amber-500 transition-colors">
+                     
+                     <div [id]="'circuit_in_' + circ.id" class="w-4 h-4 rounded-full border-2 cursor-pointer hover:scale-125 transition-all bg-slate-200"
+                          [class.ring-4]="activeTerminal() === 'circuit_in_' + circ.id" [class.ring-amber-500]="activeTerminal() === 'circuit_in_' + circ.id"
+                          [style.borderColor]="getTerminalColor('circuit_in_' + circ.id)" [style.backgroundColor]="isConnected('circuit_in_' + circ.id) ? getTerminalColor('circuit_in_' + circ.id) : '#e2e8f0'"
+                          (click)="onTerminalClick('circuit_in_' + circ.id, $event)"></div>
+
+                     <div class="w-full h-3 bg-slate-800 rounded-sm shadow-inner mt-1"></div>
+                     <div class="text-[11px] font-black text-center text-slate-700">{{circ.current}}A</div>
+                     <div class="w-full h-4 bg-slate-300 rounded-sm border-t border-slate-400 flex items-center justify-center mb-1">
+                        <div class="w-2 h-1 bg-slate-500 rounded-full"></div>
+                     </div>
+                     
+                     <div class="w-4 h-4 rounded-full border-2 border-slate-400 bg-slate-200"></div>
+                     
+                     <!-- Tooltip -->
+                     <div class="absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap transition-opacity shadow-lg z-50 border border-white/10 font-medium">
+                       {{circ.name}}
+                     </div>
+                     
+                     <!-- Remove button -->
+                     <button (click)="removeCircuit(circ.id, $event)" class="absolute -bottom-10 left-1/2 -translate-x-1/2 w-7 h-7 bg-red-500 hover:bg-red-600 shadow-lg text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all z-50 scale-75 group-hover:scale-100">
+                       <mat-icon class="text-[18px] w-[18px] h-[18px]">close</mat-icon>
+                     </button>
+                  </div>
+                }
+                
+                @if (!hasGeral() && !hasDR() && !hasDPS() && circuits().length === 0) {
+                   <div class="w-full h-[140px] flex items-center justify-center">
+                      <p class="text-slate-500/80 font-medium text-sm flex items-center gap-2">
+                         <mat-icon>arrow_back</mat-icon> Adicione componentes e clique nos terminais para fia-los
+                      </p>
+                   </div>
+                }
+             </div>
+           </div>
+
+           <!-- Barramentos (Bottom) -->
+           <div class="w-full flex justify-end gap-12 mt-8 relative z-40 cursor-default">
+             
+             <!-- Barramento Terra -->
+             <div class="flex flex-col items-center bg-slate-900/50 p-3 rounded-xl border border-slate-400 shadow-lg">
+               <div class="text-[10px] font-bold text-slate-200 mb-2">TERRA (PE)</div>
+               <div class="w-32 h-6 bg-green-500/20 border border-green-500/50 rounded flex items-center justify-evenly px-2">
+                  <div id="bus_ground" class="w-4 h-4 rounded-full border-2 cursor-pointer transition-all bg-slate-800"
+                       [class.ring-4]="activeTerminal() === 'bus_ground'" [class.ring-amber-500]="activeTerminal() === 'bus_ground'"
+                       [style.borderColor]="getTerminalColor('bus_ground')" [style.backgroundColor]="isConnected('bus_ground') ? getTerminalColor('bus_ground') : '#1e293b'"
+                       (click)="onTerminalClick('bus_ground', $event)"></div>
+                  <div class="w-2 h-2 rounded-full bg-slate-400"></div>
+                  <div class="w-2 h-2 rounded-full bg-slate-400"></div>
+               </div>
+             </div>
+
+             <!-- Barramento Neutro -->
+             <div class="flex flex-col items-center bg-slate-900/50 p-3 rounded-xl border border-slate-400 shadow-lg">
+               <div class="text-[10px] font-bold text-slate-200 mb-2">NEUTRO (N)</div>
+               <div class="w-32 h-6 bg-blue-500/20 border border-blue-500/50 rounded flex items-center justify-evenly px-2">
+                  <div id="bus_neutral" class="w-4 h-4 rounded-full border-2 cursor-pointer transition-all bg-slate-800"
+                       [class.ring-4]="activeTerminal() === 'bus_neutral'" [class.ring-amber-500]="activeTerminal() === 'bus_neutral'"
+                       [style.borderColor]="getTerminalColor('bus_neutral')" [style.backgroundColor]="isConnected('bus_neutral') ? getTerminalColor('bus_neutral') : '#1e293b'"
+                       (click)="onTerminalClick('bus_neutral', $event)"></div>
+                  <div class="w-2 h-2 rounded-full bg-slate-400"></div>
+                  <div class="w-2 h-2 rounded-full bg-slate-400"></div>
+               </div>
+             </div>
+             
+           </div>
+
+        </div>
+
+        <!-- Validation Controls -->
+        <div class="mt-6 flex flex-col md:flex-row gap-4">
+          <button (click)="validateQdc()" class="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold py-4 rounded-xl transition-colors shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+            Validar Quadro QDC
+          </button>
+          <button (click)="clearWires()" class="px-6 py-4 bg-slate-800 hover:bg-slate-700 border border-white/10 text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2">
+            <mat-icon>delete_sweep</mat-icon> Limpar Fios
+          </button>
+        </div>
+        
+        <!-- Diagnosis Report -->
+        @if (showValidation()) {
+          <div class="mt-6 p-6 bg-slate-800/80 border border-white/5 rounded-2xl shadow-lg backdrop-blur-sm animate-fade-in-up">
+            <h4 class="font-bold text-white mb-4 text-lg flex items-center gap-2">
+               <mat-icon class="text-amber-500">assignment</mat-icon>
+               Diagnóstico da Fiação
+            </h4>
+            <ul class="space-y-3 text-sm font-medium">
+              
+              @if (hasGeral()) {
+                @if (!diagGeralWired()) {
+                   <li class="flex items-start gap-3 text-red-400 bg-red-950/20 p-3 rounded-lg border border-red-900/30">
+                      <mat-icon class="text-[20px] w-[20px] h-[20px]">error</mat-icon> 
+                      O Disjuntor Geral precisa estar conectado a todas as Fases da Rede!
+                   </li>
+                } @else {
+                   <li class="flex items-start gap-3 text-green-400 bg-green-950/20 p-3 rounded-lg border border-green-900/30">
+                      <mat-icon class="text-[20px] w-[20px] h-[20px]">check_circle</mat-icon> 
+                      Disjuntor Geral devidamente alimentado.
+                   </li>
+                }
+              } @else {
+                 <li class="flex items-start gap-3 text-red-400 bg-red-950/20 p-3 rounded-lg border border-red-900/30">
+                    <mat-icon class="text-[20px] w-[20px] h-[20px]">error</mat-icon> 
+                    Adicione um Disjuntor Geral para proteção total do quadro.
+                 </li>
+              }
+
+              @if (hasDR()) {
+                 @if (!diagDrPhaseWired() || !diagDrNeutralWired()) {
+                   <li class="flex items-start gap-3 text-red-400 bg-red-950/20 p-3 rounded-lg border border-red-900/30">
+                      <mat-icon class="text-[20px] w-[20px] h-[20px]">warning</mat-icon> 
+                      O DR precisa receber Fase(s) e Neutro (Geral/Rede), e sua saída Neutro deve ir para o Barramento!
+                   </li>
+                 } @else {
+                   <li class="flex items-start gap-3 text-green-400 bg-green-950/20 p-3 rounded-lg border border-green-900/30">
+                      <mat-icon class="text-[20px] w-[20px] h-[20px]">health_and_safety</mat-icon> 
+                      Fiação do DR (Fase e Neutro) instalada corretamente. Choques prevenidos!
+                   </li>
+                 }
+              } @else {
+                 <li class="flex items-start gap-3 text-amber-400 bg-amber-950/20 p-3 rounded-lg border border-amber-900/30">
+                    <mat-icon class="text-[20px] w-[20px] h-[20px]">warning</mat-icon> 
+                    Sem DR! Adicione para proteger contra choques (obrigatório em áreas molhadas).
+                 </li>
+              }
+
+              @if (hasDPS()) {
+                 @if (!diagDpsWired()) {
+                   <li class="flex items-start gap-3 text-amber-400 bg-amber-950/20 p-3 rounded-lg border border-amber-900/30">
+                      <mat-icon class="text-[20px] w-[20px] h-[20px]">flash_on</mat-icon> 
+                      Os DPS devem ser ligados às Fases e as saídas devem ir direto para o Barramento de Terra!
+                   </li>
+                 } @else {
+                    <li class="flex items-start gap-3 text-green-400 bg-green-950/20 p-3 rounded-lg border border-green-900/30">
+                      <mat-icon class="text-[20px] w-[20px] h-[20px]">verified</mat-icon> 
+                      DPS devidamente aterrados. Equipamentos protegidos contra raios!
+                   </li>
+                 }
+              }
+
+              @if (!diagGroundWired()) {
+                 <li class="flex items-start gap-3 text-amber-400 bg-amber-950/20 p-3 rounded-lg border border-amber-900/30">
+                    <mat-icon class="text-[20px] w-[20px] h-[20px]">info</mat-icon> 
+                    Conecte o Terra da Rede ao Barramento de Terra.
+                 </li>
+              } @else {
+                 <li class="flex items-start gap-3 text-green-400 bg-green-950/20 p-3 rounded-lg border border-green-900/30">
+                    <mat-icon class="text-[20px] w-[20px] h-[20px]">check_circle</mat-icon> 
+                    Barramento de Terra alimentado corretamente.
+                 </li>
+              }
+              
+              @if (circuits().length > 0) {
+                 @if (!diagCircuitsWired()) {
+                    <li class="flex items-start gap-3 text-red-400 bg-red-950/20 p-3 rounded-lg border border-red-900/30">
+                       <mat-icon class="text-[20px] w-[20px] h-[20px]">power_off</mat-icon> 
+                       Alguns circuitos estão sem energia! Conecte-os à Fase (da saída do DR ou Geral).
+                    </li>
+                 } @else {
+                    <li class="flex items-start gap-3 text-green-400 bg-green-950/20 p-3 rounded-lg border border-green-900/30">
+                       <mat-icon class="text-[20px] w-[20px] h-[20px]">power</mat-icon> 
+                       Todos os disjuntores de circuito estão devidamente energizados!
+                    </li>
+                 }
+              }
+            </ul>
+            
+            @if (safetyScore() === 100) {
+               <div class="mt-6 p-4 bg-green-500/20 text-green-400 rounded-xl text-center font-bold flex items-center justify-center gap-2 border border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.2)]">
+                 <mat-icon>military_tech</mat-icon> Parabéns! Quadro 100% focado e dentro das normas!
+               </div>
+            } @else {
+               <div class="mt-6 p-4 bg-amber-500/10 text-amber-500 rounded-xl text-center font-bold flex items-center justify-center gap-2 border border-amber-500/30">
+                 Resolva os problemas indicados acima para garantir a segurança.
+               </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>
